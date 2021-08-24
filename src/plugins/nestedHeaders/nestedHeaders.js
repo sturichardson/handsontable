@@ -442,11 +442,10 @@ export class NestedHeaders extends BasePlugin {
       columnsToSelect.push(columnIndex, columnIndex + origColspan - 1, coords.row);
     }
 
-    if (!controller.column) {
+    if (!controller.nestedHeadersColumn) {
       // The plugin takes control of the how the columns are selected.
       selection.selectColumns(...columnsToSelect);
     }
-
   }
 
   /**

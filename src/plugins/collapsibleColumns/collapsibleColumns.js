@@ -447,7 +447,7 @@ export class CollapsibleColumns extends BasePlugin {
    */
   onBeforeOnCellMouseDown(event, coords, TD, controller) {
     if (hasClass(event.target, 'collapsibleIndicator')) {
-      controller.column = true;
+      controller.nestedHeadersColumn = true;
 
       if (hasClass(event.target, 'expanded')) {
         this.eventManager.fireEvent(event.target, 'mouseup');
