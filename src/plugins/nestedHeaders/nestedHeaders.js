@@ -406,7 +406,7 @@ export class NestedHeaders extends BasePlugin {
    * @param {MouseEvent} event Mouse event.
    * @param {CellCoords} coords Cell coords object containing the visual coordinates of the clicked cell.
    */
-  onAfterOnCellMouseDown(event, coords) {
+  onAfterOnCellMouseDown(event, coords, TD, controller) {
     const headerNodeData = this._getHeaderTreeNodeDataByCoords(coords);
 
     if (!headerNodeData) {
@@ -442,8 +442,11 @@ export class NestedHeaders extends BasePlugin {
       columnsToSelect.push(columnIndex, columnIndex + origColspan - 1, coords.row);
     }
 
-    // The plugin takes control of the how the columns are selected.
-    selection.selectColumns(...columnsToSelect);
+    if (!controller.column) {
+      // The plugin takes control of the how the columns are selected.
+      selection.selectColumns(...columnsToSelect);
+    }
+
   }
 
   /**

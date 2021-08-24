@@ -141,7 +141,7 @@ export class CollapsibleColumns extends BasePlugin {
     this.addHook('init', () => this.onInit());
     this.addHook('afterLoadData', (...args) => this.onAfterLoadData(...args));
     this.addHook('afterGetColHeader', (col, TH) => this.onAfterGetColHeader(col, TH));
-    this.addHook('beforeOnCellMouseDown', (event, coords, TD) => this.onBeforeOnCellMouseDown(event, coords, TD));
+    this.addHook('beforeOnCellMouseDown', (...args) => this.onBeforeOnCellMouseDown(...args));
 
     super.enablePlugin();
     // @TODO: Workaround for broken plugin initialization abstraction (#6806).
@@ -445,8 +445,10 @@ export class CollapsibleColumns extends BasePlugin {
    * @param {object} event Mouse event.
    * @param {object} coords Event coordinates.
    */
-  onBeforeOnCellMouseDown(event, coords) {
+  onBeforeOnCellMouseDown(event, coords, TD, controller) {
     if (hasClass(event.target, 'collapsibleIndicator')) {
+      controller.column = true;
+
       if (hasClass(event.target, 'expanded')) {
         this.eventManager.fireEvent(event.target, 'mouseup');
         this.toggleCollapsibleSection([coords], 'collapse');
@@ -455,8 +457,6 @@ export class CollapsibleColumns extends BasePlugin {
         this.eventManager.fireEvent(event.target, 'mouseup');
         this.toggleCollapsibleSection([coords], 'expand');
       }
-
-      stopImmediatePropagation(event);
     }
   }
 

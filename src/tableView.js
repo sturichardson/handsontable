@@ -684,7 +684,7 @@ class TableView {
           controller,
         });
 
-        this.instance.runHooks('afterOnCellMouseDown', event, visualCoords, TD);
+        this.instance.runHooks('afterOnCellMouseDown', event, visualCoords, TD, controller);
         this.activeWt = this.wt;
       },
       onCellContextMenu: (event, coords, TD, wt) => {
