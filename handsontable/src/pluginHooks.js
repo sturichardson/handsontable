@@ -69,7 +69,7 @@ const REGISTERED_HOOKS = [
    * __Note:__ For performance reasons, the `changes` array is null for `"loadData"` source.
    *
    * @event Hooks#afterChange
-   * @param {Array} changes 2D array containing information about each of the edited cells `[[row, prop, oldVal, newVal], ...]`.
+   * @param {Array[]} changes 2D array containing information about each of the edited cells `[[row, prop, oldVal, newVal], ...]`. `row` is a visual row index.
    * @param {string} [source] String that identifies source of hook call ([list of all available sources](@/guides/getting-started/events-and-hooks.md#definition-for-source-argument)).
    * @example
    * ```js
@@ -218,7 +218,7 @@ const REGISTERED_HOOKS = [
   'afterCreateRow',
 
   /**
-   * Fired after the current cell is deselected.
+   * Fired after all selected cells are deselected.
    *
    * @event Hooks#afterDeselect
    */
@@ -302,8 +302,8 @@ const REGISTERED_HOOKS = [
    * or the [`updateSettings()`](@/api/core.md#updatesettings) method.
    *
    * Read more:
-   * - [Binding to data &#8594;](@/guides/getting-started/binding-to-data.md)
-   * - [Saving data &#8594;](@/guides/getting-started/saving-data.md)
+   * - [Binding to data](@/guides/getting-started/binding-to-data.md)
+   * - [Saving data](@/guides/getting-started/saving-data.md)
    *
    * @event Hooks#afterLoadData
    * @param {Array} sourceData An [array of arrays](@/guides/getting-started/binding-to-data.md#array-of-arrays), or an [array of objects](@/guides/getting-started/binding-to-data.md#array-of-objects), that contains Handsontable's data
@@ -317,8 +317,8 @@ const REGISTERED_HOOKS = [
    * modifies Handsontable's [`data`](@/api/options.md#data).
    *
    * Read more:
-   * - [Binding to data &#8594;](@/guides/getting-started/binding-to-data.md)
-   * - [Saving data &#8594;](@/guides/getting-started/saving-data.md)
+   * - [Binding to data](@/guides/getting-started/binding-to-data.md)
+   * - [Saving data](@/guides/getting-started/saving-data.md)
    *
    * @event Hooks#afterUpdateData
    * @since 11.1.0
@@ -634,7 +634,7 @@ const REGISTERED_HOOKS = [
    * @param {string|number} prop Property name / visual column index.
    * @param {string} [source] String that identifies source of hook call
    *                          ([list of all available sources](@/guides/getting-started/events-and-hooks.md#definition-for-source-argument)).
-   * @returns {void | boolean} If `false` the cell will be marked as invalid, `true` otherwise.
+   * @returns {undefined | boolean} If `false` the cell will be marked as invalid, `true` otherwise.
    */
   'afterValidate',
 
@@ -710,10 +710,10 @@ const REGISTERED_HOOKS = [
    * table rendering.
    *
    * @event Hooks#beforeChange
-   * @param {Array[]} changes 2D array containing information about each of the edited cells.
+   * @param {Array[]} changes 2D array containing information about each of the edited cells `[[row, prop, oldVal, newVal], ...]`. `row` is a visual row index.
    * @param {string} [source] String that identifies source of hook call
    *                          ([list of all available sources](@/guides/getting-started/events-and-hooks.md#definition-for-source-argument)).
-   * @returns {void | boolean} If `false` all changes were cancelled, `true` otherwise.
+   * @returns {undefined | boolean} If `false` all changes were cancelled, `true` otherwise.
    * @example
    * ```js
    * // To disregard a single change, set changes[i] to null or remove it from array using changes.splice(i, 1).
@@ -803,8 +803,8 @@ const REGISTERED_HOOKS = [
    * or the [`updateSettings()`](@/api/core.md#updatesettings) method.
    *
    * Read more:
-   * - [Binding to data &#8594;](@/guides/getting-started/binding-to-data.md)
-   * - [Saving data &#8594;](@/guides/getting-started/saving-data.md)
+   * - [Binding to data](@/guides/getting-started/binding-to-data.md)
+   * - [Saving data](@/guides/getting-started/saving-data.md)
    *
    * @event Hooks#beforeLoadData
    * @since 8.0.0
@@ -820,8 +820,8 @@ const REGISTERED_HOOKS = [
    * modifies Handsontable's [`data`](@/api/options.md#data).
    *
    * Read more:
-   * - [Binding to data &#8594;](@/guides/getting-started/binding-to-data.md)
-   * - [Saving data &#8594;](@/guides/getting-started/saving-data.md)
+   * - [Binding to data](@/guides/getting-started/binding-to-data.md)
+   * - [Saving data](@/guides/getting-started/saving-data.md)
    *
    * @event Hooks#beforeUpdateData
    * @since 11.1.0
@@ -984,7 +984,7 @@ const REGISTERED_HOOKS = [
    * @param {number} column Visual column index.
    * @param {string} key The updated meta key.
    * @param {*} value The updated meta value.
-   * @returns {*|boolean} If false is returned the action is canceled.
+   * @returns {boolean|undefined} If false is returned the action is canceled.
    */
   'beforeSetCellMeta',
 
@@ -1134,6 +1134,7 @@ const REGISTERED_HOOKS = [
    * @param {boolean} topmost If set to `true`, it returns the TD element from the topmost overlay. For example,
    *                          if the wanted cell is in the range of fixed rows, it will return a TD element
    *                          from the `top` overlay.
+   * @returns {undefined|number[]}
    */
   'modifyGetCellCoords',
 
@@ -1168,8 +1169,9 @@ const REGISTERED_HOOKS = [
   'beforeHighlightingColumnHeader',
 
   /**
-   * Fired by {@link PersistentState} plugin, after loading value, saved under given key, from browser local storage. This hook is fired when
-   * {@link Options#persistentState} option is enabled.
+   * Fired by {@link PersistentState} plugin, after loading value, saved under given key, from browser local storage.
+   *
+   * The `persistentStateLoad` hook is fired even when the {@link Options#persistentState} option is disabled.
    *
    * @event Hooks#persistentStateLoad
    * @param {string} key Key.
@@ -1187,8 +1189,9 @@ const REGISTERED_HOOKS = [
   'persistentStateReset',
 
   /**
-   * Fired by {@link PersistentState} plugin, after saving value under given key in browser local storage. This hook is fired when
-   * {@link Options#persistentState} option is enabled.
+   * Fired by {@link PersistentState} plugin, after saving value under given key in browser local storage.
+   *
+   * The `persistentStateSave` hook is fired even when the {@link Options#persistentState} option is disabled.
    *
    * @event Hooks#persistentStateSave
    * @param {string} key Key.
@@ -1205,7 +1208,7 @@ const REGISTERED_HOOKS = [
    * @event Hooks#beforeColumnSort
    * @param {Array} currentSortConfig Current sort configuration (for all sorted columns).
    * @param {Array} destinationSortConfigs Destination sort configuration (for all sorted columns).
-   * @returns {boolean | void} If `false` the column will not be sorted, `true` otherwise.
+   * @returns {boolean | undefined} If `false` the column will not be sorted, `true` otherwise.
    */
   'beforeColumnSort',
 
@@ -1366,6 +1369,27 @@ const REGISTERED_HOOKS = [
   'afterPaste',
 
   /**
+   * Fired by the {@link ManualColumnFreeze} plugin, before freezing a column.
+   *
+   * @event Hooks#beforeColumnFreeze
+   * @since 12.1.0
+   * @param {number} column The visual index of the column that is going to freeze.
+   * @param {boolean} freezePerformed If `true`: the column is going to freeze. If `false`: the column is not going to freeze (which might happen if the column is already frozen).
+   * @returns {boolean|undefined} If `false`: the column is not going to freeze, and the `afterColumnFreeze` hook won't fire.
+   */
+  'beforeColumnFreeze',
+
+  /**
+   * Fired by the {@link ManualColumnFreeze} plugin, right after freezing a column.
+   *
+   * @event Hooks#afterColumnFreeze
+   * @since 12.1.0
+   * @param {number} column The visual index of the frozen column.
+   * @param {boolean} freezePerformed If `true`: the column got successfully frozen. If `false`: the column didn't get frozen.
+   */
+  'afterColumnFreeze',
+
+  /**
    * Fired by {@link ManualColumnMove} plugin before change order of the visual indexes. This hook is fired when
    * {@link Options#manualColumnMove} option is enabled.
    *
@@ -1381,7 +1405,7 @@ const REGISTERED_HOOKS = [
    *                                     [documentation](@/guides/columns/column-moving.md).
    *                                     It's `undefined` when `dragColumns` function wasn't called.
    * @param {boolean} movePossible Indicates if it's possible to move rows to the desired position.
-   * @returns {void | boolean} If `false` the column will not be moved, `true` otherwise.
+   * @returns {undefined | boolean} If `false` the column will not be moved, `true` otherwise.
    */
   'beforeColumnMove',
 
@@ -1404,6 +1428,27 @@ const REGISTERED_HOOKS = [
    * @param {boolean} orderChanged Indicates if order of columns was changed by move.
    */
   'afterColumnMove',
+
+  /**
+   * Fired by the {@link ManualColumnFreeze} plugin, before unfreezing a column.
+   *
+   * @event Hooks#beforeColumnUnfreeze
+   * @since 12.1.0
+   * @param {number} column The visual index of the column that is going to unfreeze.
+   * @param {boolean} unfreezePerformed If `true`: the column is going to unfreeze. If `false`: the column is not going to unfreeze (which might happen if the column is already unfrozen).
+   * @returns {boolean|undefined} If `false`: the column is not going to unfreeze, and the `afterColumnUnfreeze` hook won't fire.
+   */
+  'beforeColumnUnfreeze',
+
+  /**
+   * Fired by the {@link ManualColumnFreeze} plugin, right after unfreezing a column.
+   *
+   * @event Hooks#afterColumnUnfreeze
+   * @since 12.1.0
+   * @param {number} column The visual index of the unfrozen column.
+   * @param {boolean} unfreezePerformed If `true`: the column got successfully unfrozen. If `false`: the column didn't get unfrozen.
+   */
+  'afterColumnUnfreeze',
 
   /**
    * Fired by {@link ManualRowMove} plugin before changing the order of the visual indexes. This hook is fired when
@@ -1476,7 +1521,7 @@ const REGISTERED_HOOKS = [
    * @param {number} newSize Calculated new row height.
    * @param {number} row Visual index of the resized row.
    * @param {boolean} isDoubleClick Flag that determines whether there was a double-click.
-   * @returns {number} Returns the new row size or `undefined` if row size should be calculated automatically.
+   * @returns {number|undefined} Returns the new row size or `undefined` if row size should be calculated automatically.
    */
   'beforeRowResize',
 
@@ -1513,7 +1558,7 @@ const REGISTERED_HOOKS = [
    * @event Hooks#beforeStretchingColumnWidth
    * @param {number} stretchedWidth Calculated width.
    * @param {number} column Visual column index.
-   * @returns {number} Returns new width which will be applied to the column element.
+   * @returns {number|undefined} Returns new width which will be applied to the column element.
    */
   'beforeStretchingColumnWidth',
 

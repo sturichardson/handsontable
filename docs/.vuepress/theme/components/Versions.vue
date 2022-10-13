@@ -15,6 +15,11 @@ export default {
   components: {
     DropdownLink
   },
+  data() {
+    return {
+      item: [],
+    };
+  },
   methods: {
     addLatest(version) {
       if (version === this.$page.latestVersion) {
@@ -24,13 +29,11 @@ export default {
       return version;
     },
     getLink(version) {
-      const pathWithoutVersion = this.$route.path.replace(/^\/(\d+\.\d+|next)/, '');
-
       if (version === this.$page.latestVersion) {
-        return `/docs${pathWithoutVersion}`;
+        return '/docs/';
       }
 
-      return `/docs/${version}${pathWithoutVersion}`;
+      return `/docs/${version}/`;
     },
     getLegacyVersions() {
       return [
@@ -51,26 +54,24 @@ export default {
         '4.0.0',
       ].map(version => ({
         text: version.replace(/\.\d+$/, ''),
-        link: `https://handsontable.com/docs/${version}/`
+        link: `${this.$page.baseUrl}/docs/${version}/`
       }));
     }
   },
-  computed: {
-    item() {
-      return {
-        text: this.addLatest(this.$page.currentVersion),
-        items:
-          [
-            ...this.$page.versions.map(v => ({
-              text: `${this.addLatest(v)}`,
-              link: this.getLink(v),
-              target: '_self',
-              isHtmlLink: true
-            })),
-            ...this.getLegacyVersions()
-          ]
-      };
-    }
+  mounted() {
+    this.item = {
+      text: this.addLatest(this.$page.currentVersion),
+      items:
+        [
+          ...this.$page.versions.map(v => ({
+            text: `${this.addLatest(v)}`,
+            link: this.getLink(v),
+            target: '_self',
+            isHtmlLink: true
+          })),
+          ...this.getLegacyVersions()
+        ]
+    };
   }
 };
 </script>
